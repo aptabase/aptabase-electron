@@ -1,18 +1,13 @@
-import { IpcMainEvent, ipcMain } from "electron";
-
-// env.PKG_VERSION is replaced by rollup during build phase
-const sdkVersion = "aptabase-electron@env.PKG_VERSION"; // TODO: replace
+import { IpcMainEvent, app, ipcMain } from "electron";
+import { EnvironmentInfo, getEnvironmentInfo } from "./env";
 
 export type AptabaseOptions = {
   host?: string;
-  appVersion?: string;
 };
 
 let _appKey = "";
-let _locale = ""; // TODO
 let _apiUrl = "";
-let _isDebug = false; // TODO
-let _options: AptabaseOptions | undefined;
+let _env: EnvironmentInfo | undefined;
 
 const _hosts: { [region: string]: string } = {
   US: "https://us.aptabase.com",
@@ -38,11 +33,22 @@ function getBaseUrl(
   return _hosts[region];
 }
 
-export function initialize(appKey: string, options?: AptabaseOptions) {
-  if (!ipcMain) {
-    throw new Error(
-      "Aptabase: You need to call `.initialize()` from the main process."
+export async function initialize(
+  appKey: string,
+  options?: AptabaseOptions
+): Promise<void> {
+  if (!app || !ipcMain) {
+    console.warn(
+      "Aptabase: `initialize` must be invoked from the main process. Tracking will be disabled."
     );
+    return;
+  }
+
+  if (!app.isReady()) {
+    console.warn(
+      "Aptabase: `initialize` must be invoked after the app is ready. Tracking will be disabled."
+    );
+    return;
   }
 
   const parts = appKey.split("-");
@@ -53,10 +59,10 @@ export function initialize(appKey: string, options?: AptabaseOptions) {
     return;
   }
 
-  _appKey = appKey;
-  _options = options;
   const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
+  _env = await getEnvironmentInfo();
+  _appKey = appKey;
 
   ipcMain.on(
     "aptabase-track-event",
@@ -74,17 +80,21 @@ export function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>
 ) {
-  if (!_appKey) return;
+  if (!_appKey || !_env) return;
 
   const body = JSON.stringify({
     timestamp: new Date().toISOString(),
     sessionId: "", // TODO
     eventName: eventName,
     systemProps: {
-      isDebug: false, // TODO
-      locale: "", // TODO
-      appVersion: "", // TODO
-      sdkVersion,
+      isDebug: _env.isDebug,
+      locale: _env.locale,
+      osName: _env.osName, // TODO
+      osVersion: _env.osVersion,
+      engineName: _env.engineName,
+      engineVersion: _env.engineVersion,
+      appVersion: _env.appVersion,
+      sdkVersion: _env.sdkVersion,
     },
     props: props,
   });

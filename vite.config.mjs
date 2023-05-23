@@ -17,7 +17,7 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.${format}.js`,
     },
     rollupOptions: {
-      external: ["electron"],
+      external: ["electron", "os", "fs/promises", "child_process"],
     },
   },
   plugins: [

@@ -2,10 +2,10 @@ import { initialize, trackEvent } from "@aptabase/electron/main";
 import { BrowserWindow, app } from "electron";
 import { join } from "path";
 
-initialize("A-DEV-000");
-
 app.whenReady().then(() => {
-  trackEvent("app_started");
+  initialize("A-DEV-000").then(() => {
+    trackEvent("app_started");
+  });
 
   const win = new BrowserWindow({
     title: "Main window",
