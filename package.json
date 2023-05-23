@@ -2,16 +2,31 @@
   "name": "@aptabase/electron",
   "version": "0.1.0",
   "private": false,
-  "type": "module",
   "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
+    "./package.json": "./package.json",
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
       "types": "./dist/index.d.ts"
+    },
+    "./main": {
+      "import": "./dist/main.es.js",
+      "require": "./dist/main.cjs.js",
+      "types": "./dist/main.d.ts"
+    },
+    "./preload": {
+      "import": "./dist/preload.es.js",
+      "require": "./dist/preload.cjs.js",
+      "types": "./dist/preload.d.ts"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*"
+      ]
     }
   },
   "repository": {
@@ -24,10 +39,9 @@
   "homepage": "https://github.com/aptabase/aptabase-electron",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c ./rollup.config.mjs",
-    "watch": "rollup -c ./rollup.config.mjs -w",
-    "prepublishOnly": "yarn build",
-    "pretest": "yarn build"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "files": [
     "README.md",
@@ -36,12 +50,8 @@
     "package.json"
   ],
   "devDependencies": {
-    "@rollup/plugin-replace": "5.0.2",
-    "@rollup/plugin-typescript": "11.1.0",
-    "rollup": "3.21.6",
-    "@rollup/plugin-terser": "0.4.1",
-    "tslib": "2.5.0",
-    "typescript": "5.0.4"
+    "vite": "4.3.8",
+    "vite-plugin-dts": "2.3.0"
   },
   "peerDependencies": {
     "electron": ">= 22.x"

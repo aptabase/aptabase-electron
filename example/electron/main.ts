@@ -1,4 +1,7 @@
+import * as apta from "@aptabase/electron/main";
 import { app, BrowserWindow } from "electron";
+
+console.log(apta);
 
 app.whenReady().then(() => {
   const win = new BrowserWindow({
