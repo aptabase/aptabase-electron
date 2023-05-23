@@ -39,9 +39,7 @@
   "homepage": "https://github.com/aptabase/aptabase-electron",
   "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build"
   },
   "files": [
     "README.md",
@@ -50,6 +48,7 @@
     "package.json"
   ],
   "devDependencies": {
+    "@rollup/plugin-replace": "5.0.2",
     "vite": "4.3.8",
     "vite-plugin-dts": "2.3.0"
   },

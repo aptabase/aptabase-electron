@@ -7,6 +7,9 @@ export default defineConfig({
       {
         entry: "electron/main.ts",
       },
+      {
+        entry: "electron/preload.ts",
+      },
     ]),
   ],
 });

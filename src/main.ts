@@ -1,7 +1,7 @@
-import { ipcMain } from "electron";
+import { IpcMainEvent, ipcMain } from "electron";
 
 // env.PKG_VERSION is replaced by rollup during build phase
-const sdkVersion = "aptabase-electron@env.PKG_VERSION";
+const sdkVersion = "aptabase-electron@env.PKG_VERSION"; // TODO: replace
 
 export type AptabaseOptions = {
   host?: string;
@@ -45,9 +45,6 @@ export function initialize(appKey: string, options?: AptabaseOptions) {
     );
   }
 
-  _appKey = appKey;
-  _options = options;
-
   const parts = appKey.split("-");
   if (parts.length !== 3 || _hosts[parts[1]] === undefined) {
     console.warn(
@@ -56,10 +53,41 @@ export function initialize(appKey: string, options?: AptabaseOptions) {
     return;
   }
 
+  _appKey = appKey;
+  _options = options;
   const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
 
-  // ipcMain.on("aptabase-track-event", (event) => {
-  //   console.log("aptabase-track-event", event);
-  // });
+  ipcMain.on(
+    "aptabase-track-event",
+    (
+      event: IpcMainEvent,
+      eventName: string,
+      props?: Record<string, string | number | boolean>
+    ) => {
+      trackEvent(eventName, props);
+    }
+  );
+}
+
+export function trackEvent(
+  eventName: string,
+  props?: Record<string, string | number | boolean>
+) {
+  if (!_appKey) return;
+
+  const body = JSON.stringify({
+    timestamp: new Date().toISOString(),
+    sessionId: "", // TODO
+    eventName: eventName,
+    systemProps: {
+      isDebug: false, // TODO
+      locale: "", // TODO
+      appVersion: "", // TODO
+      sdkVersion,
+    },
+    props: props,
+  });
+
+  console.log(body);
 }

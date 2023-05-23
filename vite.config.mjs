@@ -1,8 +1,10 @@
-const path = require("path");
-const { defineConfig } = require("vite");
-const dts = require("vite-plugin-dts");
+import replace from "@rollup/plugin-replace";
+import path from "path";
+import { defineConfig } from "vite";
+import dts from "vite-plugin-dts";
+import pkg from "./package.json" assert { type: "json" };
 
-module.exports = defineConfig({
+export default defineConfig({
   build: {
     lib: {
       formats: ["cjs", "es"],
@@ -18,5 +20,10 @@ module.exports = defineConfig({
       external: ["electron"],
     },
   },
-  plugins: [dts()],
+  plugins: [
+    dts(),
+    replace({
+      "env.PKG_VERSION": pkg.version,
+    }),
+  ],
 });
