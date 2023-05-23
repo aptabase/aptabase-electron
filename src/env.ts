@@ -60,7 +60,6 @@ async function getMacOSVersion() {
     });
     return output.trim();
   } catch (ex) {
-    console.error(ex);
     return "";
   }
 }

@@ -42,7 +42,7 @@ export async function initialize(
   const parts = appKey.split("-");
   if (parts.length !== 3 || _hosts[parts[1]] === undefined) {
     console.warn(
-      `The Aptabase App Key "${appKey}" is invalid. Tracking will be disabled.`
+      `Aptabase: App Key "${appKey}" is invalid. Tracking will be disabled.`
     );
     return;
   }
@@ -108,7 +108,11 @@ export function trackEvent(
     req.on("error", reject);
     req.on("abort", reject);
     req.on("response", (res) => {
-      console.log(res.statusCode);
+      if (res.statusCode >= 300) {
+        console.warn(
+          `Aptabase: Failed to send event "${eventName}": ${res.statusCode} ${res.statusMessage}`
+        );
+      }
       resolve();
     });
 
@@ -124,7 +128,7 @@ function getBaseUrl(
   if (region === "SH") {
     if (!options?.host) {
       console.warn(
-        `Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`
+        `Aptabase: Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`
       );
       return;
     }
