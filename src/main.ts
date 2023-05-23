@@ -1,10 +1,15 @@
-import { IpcMainEvent, app, ipcMain } from "electron";
+import { randomUUID } from "crypto";
+import { IpcMainEvent, app, ipcMain, net } from "electron";
 import { EnvironmentInfo, getEnvironmentInfo } from "./env";
 
 export type AptabaseOptions = {
   host?: string;
 };
 
+// Session expires after 1 hour of inactivity
+const SESSION_TIMEOUT = 1 * 60 * 60;
+let _sessionId = randomUUID();
+let _lastTouched = new Date();
 let _appKey = "";
 let _apiUrl = "";
 let _env: EnvironmentInfo | undefined;
@@ -15,23 +20,6 @@ const _hosts: { [region: string]: string } = {
   DEV: "http://localhost:3000",
   SH: "",
 };
-
-function getBaseUrl(
-  region: string,
-  options?: AptabaseOptions
-): string | undefined {
-  if (region === "SH") {
-    if (!options?.host) {
-      console.warn(
-        `Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`
-      );
-      return;
-    }
-    return options.host;
-  }
-
-  return _hosts[region];
-}
 
 export async function initialize(
   appKey: string,
@@ -79,17 +67,25 @@ export async function initialize(
 export function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>
-) {
-  if (!_appKey || !_env) return;
+): Promise<void> {
+  if (!_appKey || !_env) return Promise.resolve();
 
-  const body = JSON.stringify({
-    timestamp: new Date().toISOString(),
-    sessionId: "", // TODO
+  let now = new Date();
+  const diffInMs = now.getTime() - _lastTouched.getTime();
+  const diffInSec = Math.floor(diffInMs / 1000);
+  if (diffInSec > SESSION_TIMEOUT) {
+    _sessionId = randomUUID();
+  }
+  _lastTouched = now;
+
+  const body = {
+    timestamp: now.toISOString(),
+    sessionId: _sessionId,
     eventName: eventName,
     systemProps: {
       isDebug: _env.isDebug,
       locale: _env.locale,
-      osName: _env.osName, // TODO
+      osName: _env.osName,
       osVersion: _env.osVersion,
       engineName: _env.engineName,
       engineVersion: _env.engineVersion,
@@ -97,7 +93,43 @@ export function trackEvent(
       sdkVersion: _env.sdkVersion,
     },
     props: props,
-  });
+  };
 
-  console.log(body);
+  return new Promise((resolve, reject) => {
+    const req = net.request({
+      method: "POST",
+      url: _apiUrl,
+      credentials: "omit",
+    });
+
+    req.setHeader("Content-Type", "application/json");
+    req.setHeader("App-Key", _appKey);
+
+    req.on("error", reject);
+    req.on("abort", reject);
+    req.on("response", (res) => {
+      console.log(res.statusCode);
+      resolve();
+    });
+
+    req.write(JSON.stringify(body));
+    req.end();
+  });
+}
+
+function getBaseUrl(
+  region: string,
+  options?: AptabaseOptions
+): string | undefined {
+  if (region === "SH") {
+    if (!options?.host) {
+      console.warn(
+        `Host parameter must be defined when using Self-Hosted App Key. Tracking will be disabled.`
+      );
+      return;
+    }
+    return options.host;
+  }
+
+  return _hosts[region];
 }

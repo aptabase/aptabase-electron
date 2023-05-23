@@ -3,7 +3,7 @@ import { BrowserWindow, app } from "electron";
 import { join } from "path";
 
 app.whenReady().then(() => {
-  initialize("A-DEV-000").then(() => {
+  initialize("A-DEV-7523634193").then(() => {
     trackEvent("app_started");
   });
 
