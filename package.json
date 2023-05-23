@@ -1,0 +1,49 @@
+{
+  "name": "@aptabase/electron",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aptabase/aptabase-electron.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aptabase/aptabase-electron/issues"
+  },
+  "homepage": "https://github.com/aptabase/aptabase-electron",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c ./rollup.config.mjs",
+    "watch": "rollup -c ./rollup.config.mjs -w",
+    "prepublishOnly": "yarn build",
+    "pretest": "yarn build"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "dist",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@rollup/plugin-replace": "5.0.2",
+    "@rollup/plugin-typescript": "11.1.0",
+    "rollup": "3.21.6",
+    "@rollup/plugin-terser": "0.4.1",
+    "tslib": "2.5.0",
+    "typescript": "5.0.4"
+  },
+  "peerDependencies": {
+    "electron": ">= 22.x"
+  }
+}
