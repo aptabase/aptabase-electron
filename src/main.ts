@@ -97,7 +97,7 @@ export function trackEvent(
 
   return new Promise((resolve) => {
     const onReject = (err: Error) => {
-      console.error(err);
+      console.error(`Aptabase: Failed to send event`, err);
       resolve();
     };
 
