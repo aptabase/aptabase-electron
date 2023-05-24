@@ -95,7 +95,12 @@ export function trackEvent(
     props: props,
   };
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
+    const onReject = (err: Error) => {
+      console.error(err);
+      resolve();
+    };
+
     const req = net.request({
       method: "POST",
       url: _apiUrl,
@@ -105,8 +110,8 @@ export function trackEvent(
     req.setHeader("Content-Type", "application/json");
     req.setHeader("App-Key", _appKey);
 
-    req.on("error", reject);
-    req.on("abort", reject);
+    req.on("error", onReject);
+    req.on("abort", onReject);
     req.on("response", (res) => {
       if (res.statusCode >= 300) {
         console.warn(
