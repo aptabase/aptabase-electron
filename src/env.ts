@@ -1,5 +1,5 @@
 import { exec } from "child_process";
-import { app } from "electron";
+import type { App } from "electron";
 import { readFile } from "fs/promises";
 import { release } from "os";
 
@@ -17,7 +17,7 @@ export interface EnvironmentInfo {
   engineVersion: String;
 }
 
-export async function getEnvironmentInfo(): Promise<EnvironmentInfo> {
+export async function getEnvironmentInfo(app: App): Promise<EnvironmentInfo> {
   const [osName, osVersion] = await getOperatingSystem();
 
   return {

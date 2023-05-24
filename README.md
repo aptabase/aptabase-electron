@@ -16,9 +16,7 @@ npm add @aptabase/electron
 yarn add @aptabase/electron
 ```
 
-## Usage with `nodeIntegration: false` and `contextIsolation: true` (recommended)
-
-If you have node integration disabled and context isolation enabled, you need to use the subpackages of this SDK.
+## Usage
 
 First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
 
@@ -51,7 +49,7 @@ import { exposeAptabase } from "@aptabase/electron/preload";
 exposeAptabase();
 ```
 
-Afterwards you can use the `trackEvent` function, but this time from the `@aptabase/electron/renderer` package:
+Afterwards you can use the `trackEvent` function from the `@aptabase/electron/renderer` package:
 
 ```js
 import { trackEvent } from "@aptabase/electron/renderer";
@@ -59,35 +57,6 @@ import { trackEvent } from "@aptabase/electron/renderer";
 trackEvent("connect_click"); // An event with no properties
 trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
 ```
-
-## Usage with `nodeIntegration: true` and `contextIsolation: false`
-
-This is not recommended for security reasons, but if you already have node integration enabled, you can use the `@aptabase/electron` package directly.
-
-First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
-
-On your Electron main's process, initialize the SDK after the app is ready:
-
-```js
-import { initialize } from "@aptabase/electron";
-
-app.whenReady().then(() => {
-  initialize("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
-
-  // ... the rest of your app initialization code
-});
-```
-
-To track events, import the `trackEvent` function from the `@aptabase/electron` package and call it from either the main process or the renderer process:
-
-```js
-import { trackEvent } from "@aptabase/electron";
-
-trackEvent("connect_click"); // An event with no properties
-trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
-```
-
-## Notes
 
 A few important notes:
 

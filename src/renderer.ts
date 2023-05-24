@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    aptabase: {
+    __APTABASE__: {
       trackEvent(
         eventName: string,
         props?: Record<string, string | number | boolean>
@@ -13,12 +13,12 @@ export function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>
 ) {
-  if (!window.aptabase) {
-    console.warn(
-      "Aptabase: You need to call `.exposeAptabase()` from the preload script."
+  if (!window.__APTABASE__) {
+    console.error(
+      "Aptabase: You need to call `.exposeAptabase()` from the preload script.222"
     );
     return;
   }
 
-  window.aptabase.trackEvent(eventName, props);
+  window.__APTABASE__.trackEvent(eventName, props);
 }

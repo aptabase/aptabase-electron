@@ -1,6 +1,10 @@
+## 0.1.2
+
+Fix for disabled contextIsolation
+
 ## 0.1.1
 
-Support for both nodeIntegration and contextIsolation
+Support for contextIsolation
 
 ## 0.1.0
 

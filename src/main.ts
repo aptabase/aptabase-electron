@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
-import { IpcMainEvent, app, ipcMain, net } from "electron";
+import type { IpcMainEvent } from "electron";
 import { EnvironmentInfo, getEnvironmentInfo } from "./env";
+const { app, ipcMain, ipcRenderer, net } = require("electron");
 
 export type AptabaseOptions = {
   host?: string;
@@ -49,7 +50,7 @@ export async function initialize(
 
   const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
-  _env = await getEnvironmentInfo();
+  _env = await getEnvironmentInfo(app);
   _appKey = appKey;
 
   ipcMain.on(
@@ -69,6 +70,12 @@ export function trackEvent(
   props?: Record<string, string | number | boolean>
 ): Promise<void> {
   if (!_appKey || !_env) return Promise.resolve();
+
+  // If we're in the renderer process, send the event to the main process
+  if (!ipcMain && ipcRenderer) {
+    ipcRenderer.emit("aptabase-track-event", eventName, props);
+    return Promise.resolve();
+  }
 
   let now = new Date();
   const diffInMs = now.getTime() - _lastTouched.getTime();
