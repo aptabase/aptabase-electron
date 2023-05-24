@@ -1,3 +1,7 @@
+## 0.2.1
+
+Fix typescript definitions
+
 ## 0.2.0
 
 Preload script is no longer required, the SDK now uses fetch via a custom protocol
