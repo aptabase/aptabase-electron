@@ -1,6 +1,6 @@
 {
   "name": "@aptabase/electron",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": false,
   "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "sideEffects": false,
@@ -15,11 +15,6 @@
       "import": "./dist/main.es.js",
       "require": "./dist/main.cjs.js",
       "types": "./dist/main.d.ts"
-    },
-    "./renderer": {
-      "import": "./dist/renderer.es.js",
-      "require": "./dist/renderer.cjs.js",
-      "types": "./dist/renderer.d.ts"
     },
     "./preload": {
       "import": "./dist/preload.es.js",

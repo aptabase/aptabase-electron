@@ -1,3 +1,7 @@
+## 0.1.4
+
+Refactored submodules to simplify setup
+
 ## 0.1.3
 
 Added notice when importing `@aptabase/electron` module

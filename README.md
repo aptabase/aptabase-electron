@@ -32,7 +32,7 @@ app.whenReady().then(() => {
 });
 ```
 
-When tracking events from your `main` process, import the `trackEvent` from the `@aptabase/electron/main` package and call it:
+When tracking events from your `main` process, import the `trackEvent` function from `@aptabase/electron/main`:
 
 ```js
 import { trackEvent } from "@aptabase/electron/main";
@@ -41,7 +41,7 @@ trackEvent("connect_click"); // An event with no properties
 trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
 ```
 
-To track events from the renderer process, add this to your preload script:
+To track events from the renderer process, you must first expose Aptabase within your preload script:
 
 ```js
 import { exposeAptabase } from "@aptabase/electron/preload";
@@ -49,10 +49,10 @@ import { exposeAptabase } from "@aptabase/electron/preload";
 exposeAptabase();
 ```
 
-Afterwards you can use the `trackEvent` function from the `@aptabase/electron/renderer` package:
+Then you can use the `trackEvent` function from the `@aptabase/electron` package:
 
 ```js
-import { trackEvent } from "@aptabase/electron/renderer";
+import { trackEvent } from "@aptabase/electron";
 
 trackEvent("connect_click"); // An event with no properties
 trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
