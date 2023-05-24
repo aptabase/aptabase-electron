@@ -1,6 +1,5 @@
 import { randomUUID } from "crypto";
-import type { IpcMainEvent } from "electron";
-import { app, ipcMain, net } from "electron";
+import { app, net, protocol } from "electron";
 import { EnvironmentInfo, getEnvironmentInfo } from "./env";
 
 export type AptabaseOptions = {
@@ -26,16 +25,9 @@ export async function initialize(
   appKey: string,
   options?: AptabaseOptions
 ): Promise<void> {
-  if (!app || !ipcMain) {
+  if (app.isReady()) {
     console.warn(
-      "Aptabase: `initialize` must be invoked from the main process. Tracking will be disabled."
-    );
-    return;
-  }
-
-  if (!app.isReady()) {
-    console.warn(
-      "Aptabase: `initialize` must be invoked after the app is ready. Tracking will be disabled."
+      "Aptabase: `initialize` must be invoked before the app is ready. Tracking will be disabled."
     );
     return;
   }
@@ -48,28 +40,34 @@ export async function initialize(
     return;
   }
 
+  registerAptabaseProtocol();
+  await app.whenReady();
+
+  registerEventHandler();
+
   const baseUrl = getBaseUrl(parts[1], options);
   _apiUrl = `${baseUrl}/api/v0/event`;
   _env = await getEnvironmentInfo(app);
   _appKey = appKey;
 
-  ipcMain.on(
-    "aptabase-track-event",
-    (
-      event: IpcMainEvent,
-      eventName: string,
-      props?: Record<string, string | number | boolean>
-    ) => {
-      trackEvent(eventName, props);
-    }
-  );
+  // some events might be emitted before the initialization is complete
+  // so we drain the buffer here
+  drainBuffer();
 }
+
+const buffer: {
+  eventName: string;
+  props?: Record<string, string | number | boolean>;
+}[] = [];
 
 export function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>
 ): Promise<void> {
-  if (!_appKey || !_env) return Promise.resolve();
+  if (!_appKey || !_env) {
+    buffer.push({ eventName, props });
+    return Promise.resolve();
+  }
 
   let now = new Date();
   const diffInMs = now.getTime() - _lastTouched.getTime();
@@ -124,6 +122,43 @@ export function trackEvent(
 
     req.write(JSON.stringify(body));
     req.end();
+  });
+}
+
+function drainBuffer() {
+  while (buffer.length > 0) {
+    const data = buffer.shift();
+    if (data) {
+      trackEvent(data.eventName, data.props);
+    }
+  }
+}
+
+function registerAptabaseProtocol() {
+  protocol.registerSchemesAsPrivileged([
+    {
+      scheme: "aptabase-ipc",
+      privileges: {
+        bypassCSP: true,
+        corsEnabled: true,
+        supportFetchAPI: true,
+        secure: true,
+      },
+    },
+  ]);
+}
+
+function registerEventHandler() {
+  protocol.registerStringProtocol("aptabase-ipc", (request, callback) => {
+    try {
+      const data = request.uploadData?.[0]?.bytes;
+      const { eventName, props } = JSON.parse(data?.toString() ?? "{}");
+      trackEvent(eventName, props);
+    } catch (err) {
+      console.error("Aptabase: Failed to send event", err);
+    }
+
+    callback("");
   });
 }
 

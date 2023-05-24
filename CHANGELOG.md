@@ -1,3 +1,7 @@
+## 0.2.0
+
+Preload script is no longer required, the SDK now uses fetch via a custom protocol
+
 ## 0.1.4
 
 Refactored submodules to simplify setup

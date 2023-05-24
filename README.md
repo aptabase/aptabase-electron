@@ -20,36 +20,19 @@ yarn add @aptabase/electron
 
 First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
 
-On your Electron main's process, initialize the SDK after the app is ready:
+On your Electron main's process, initialize the SDK before the app is ready:
 
 ```js
 import { initialize } from "@aptabase/electron/main";
 
-app.whenReady().then(() => {
-  initialize("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
+initialize("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
 
+app.whenReady().then(() => {
   // ... the rest of your app initialization code
 });
 ```
 
-When tracking events from your `main` process, import the `trackEvent` function from `@aptabase/electron/main`:
-
-```js
-import { trackEvent } from "@aptabase/electron/main";
-
-trackEvent("connect_click"); // An event with no properties
-trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
-```
-
-To track events from the renderer process, you must first expose Aptabase within your preload script:
-
-```js
-import { exposeAptabase } from "@aptabase/electron/preload";
-
-exposeAptabase();
-```
-
-Then you can use the `trackEvent` function from the `@aptabase/electron` package:
+Afterwards you can start tracking events with `trackEvent`:
 
 ```js
 import { trackEvent } from "@aptabase/electron";
@@ -57,6 +40,11 @@ import { trackEvent } from "@aptabase/electron";
 trackEvent("connect_click"); // An event with no properties
 trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
 ```
+
+**NOTE:** The `trackEvent` function is available under separate import paths, depending on where you want to track the event from.
+
+- import from `@aptabase/electron` to track events from the `renderer` process
+- import from `@aptabase/electron/main` to track events from the `main` process
 
 A few important notes:
 

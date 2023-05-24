@@ -9,9 +9,8 @@ export default defineConfig({
     lib: {
       formats: ["cjs", "es"],
       entry: {
-        index: path.resolve(__dirname, "src/index.ts"),
-        main: path.resolve(__dirname, "src/main.ts"),
-        preload: path.resolve(__dirname, "src/preload.ts"),
+        index: path.resolve(__dirname, "src/renderer/index.ts"),
+        main: path.resolve(__dirname, "src/main/index.ts"),
       },
       name: "@aptabase/electron",
       fileName: (format, entryName) => `${entryName}.${format}.js`,
