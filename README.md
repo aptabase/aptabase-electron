@@ -16,7 +16,9 @@ npm add @aptabase/electron
 yarn add @aptabase/electron
 ```
 
-## Usage
+## Usage with `nodeIntegration: false` and `contextIsolation: true` (recommended)
+
+If you have node integration disabled and context isolation enabled, you need to use the subpackages of this SDK.
 
 First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
 
@@ -32,22 +34,16 @@ app.whenReady().then(() => {
 });
 ```
 
-## Tracking Events from the Main process
-
-Simply import the `trackEvent` from the `@aptabase/electron/main` package and call it:
+When tracking events from your `main` process, import the `trackEvent` from the `@aptabase/electron/main` package and call it:
 
 ```js
-import { trackEvent } from "@aptabase/electron";
+import { trackEvent } from "@aptabase/electron/main";
 
 trackEvent("connect_click"); // An event with no properties
 trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
 ```
 
-## Tracking Events from the Renderer process
-
-This SDK does not use nodeIntegration, so you need to expose the SDK to the renderer process.
-
-On your preload script, add this:
+To track events from the renderer process, add this to your preload script:
 
 ```js
 import { exposeAptabase } from "@aptabase/electron/preload";
@@ -55,7 +51,34 @@ import { exposeAptabase } from "@aptabase/electron/preload";
 exposeAptabase();
 ```
 
-Afterwards you can use the `trackEvent` function, but this time from the `@aptabase/electron` package:
+Afterwards you can use the `trackEvent` function, but this time from the `@aptabase/electron/renderer` package:
+
+```js
+import { trackEvent } from "@aptabase/electron/renderer";
+
+trackEvent("connect_click"); // An event with no properties
+trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
+```
+
+## Usage with `nodeIntegration: true` and `contextIsolation: false`
+
+This is not recommended for security reasons, but if you already have node integration enabled, you can use the `@aptabase/electron` package directly.
+
+First you need to get your `App Key` from Aptabase, you can find it in the `Instructions` menu on the left side menu.
+
+On your Electron main's process, initialize the SDK after the app is ready:
+
+```js
+import { initialize } from "@aptabase/electron";
+
+app.whenReady().then(() => {
+  initialize("<YOUR_APP_KEY>"); // 👈 this is where you enter your App Key
+
+  // ... the rest of your app initialization code
+});
+```
+
+To track events, import the `trackEvent` function from the `@aptabase/electron` package and call it from either the main process or the renderer process:
 
 ```js
 import { trackEvent } from "@aptabase/electron";
@@ -63,6 +86,8 @@ import { trackEvent } from "@aptabase/electron";
 trackEvent("connect_click"); // An event with no properties
 trackEvent("play_music", { name: "Here comes the sun" }); // An event with a custom property
 ```
+
+## Notes
 
 A few important notes:
 
