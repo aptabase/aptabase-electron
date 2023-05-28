@@ -1,6 +1,6 @@
 {
   "name": "@aptabase/electron",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "sideEffects": false,
@@ -44,10 +44,10 @@
   ],
   "devDependencies": {
     "@rollup/plugin-replace": "5.0.2",
-    "vite": "4.3.8",
+    "vite": "4.3.9",
     "vite-plugin-dts": "2.3.0"
   },
   "peerDependencies": {
-    "electron": ">= 22.x"
+    "electron": ">= 8.x"
   }
 }

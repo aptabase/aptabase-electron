@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import type { App } from "electron";
-import { readFile } from "fs/promises";
+import { readFile } from "fs";
 import { release } from "os";
 
 // env.PKG_VERSION is replaced by Vite during build phase
@@ -66,7 +66,20 @@ async function getMacOSVersion() {
 
 async function getLinuxInfo(): Promise<[string, string]> {
   try {
-    const content = await readFile("/etc/os-release", "utf8");
+    const content = await new Promise<string>((resolve, reject) => {
+      readFile(
+        "/etc/os-release",
+        "utf8",
+        (error: Error | null, output: string) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve(output);
+        }
+      );
+    });
+
     const lines = content.split("\n");
     const osData: Record<string, string> = {};
     for (const line of lines) {

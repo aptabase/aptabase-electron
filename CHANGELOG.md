@@ -1,3 +1,7 @@
+## 0.2.2
+
+Reduced minimum Electron version to v8.x
+
 ## 0.2.1
 
 Fix typescript definitions

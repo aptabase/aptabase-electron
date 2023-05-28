@@ -1,6 +1,6 @@
-import { randomUUID } from "crypto";
 import { app, net, protocol } from "electron";
 import { EnvironmentInfo, getEnvironmentInfo } from "./env";
+import { newSessionId } from "./session";
 
 export type AptabaseOptions = {
   host?: string;
@@ -8,7 +8,7 @@ export type AptabaseOptions = {
 
 // Session expires after 1 hour of inactivity
 const SESSION_TIMEOUT = 1 * 60 * 60;
-let _sessionId = randomUUID();
+let _sessionId = newSessionId();
 let _lastTouched = new Date();
 let _appKey = "";
 let _apiUrl = "";
@@ -73,7 +73,7 @@ export function trackEvent(
   const diffInMs = now.getTime() - _lastTouched.getTime();
   const diffInSec = Math.floor(diffInMs / 1000);
   if (diffInSec > SESSION_TIMEOUT) {
-    _sessionId = randomUUID();
+    _sessionId = newSessionId();
   }
   _lastTouched = now;
 
