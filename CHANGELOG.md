@@ -1,3 +1,7 @@
+## 0.2.3
+
+Changed distributed extensions to `.cjs` and `.mjs`
+
 ## 0.2.2
 
 Reduced minimum Electron version to v8.x

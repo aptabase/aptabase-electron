@@ -13,7 +13,10 @@ export default defineConfig({
         main: path.resolve(__dirname, "src/main.ts"),
       },
       name: "@aptabase/electron",
-      fileName: (format, entryName) => `${entryName}.${format}.js`,
+      fileName: (format, entryName) => {
+        const ext = format === "es" ? "mjs" : "cjs";
+        return `${entryName}.${ext}`;
+      },
     },
     rollupOptions: {
       external: ["electron", "os", "fs", "child_process", "crypto"],
