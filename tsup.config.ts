@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 const { version } = require("./package.json");
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/main.ts"],
+  entry: ["src/index.ts", "src/main.ts", "src/preload.ts"],
   format: ["cjs", "esm"],
   dts: true,
   splitting: false,

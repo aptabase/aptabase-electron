@@ -1,6 +1,6 @@
 import { app, net, protocol } from "electron";
-import { EnvironmentInfo, getEnvironmentInfo } from "./env";
-import { newSessionId } from "./session";
+import { EnvironmentInfo, getEnvironmentInfo } from "./lib/env";
+import { newSessionId } from "./lib/session";
 
 export type AptabaseOptions = {
   host?: string;
