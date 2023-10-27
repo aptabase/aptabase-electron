@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Added support for Electron 3+
+- Added preload IPC as an alternative to Custom Protocol IPC
+
 ## 0.2.3
 
 Changed distributed extensions to `.cjs` and `.mjs`
