@@ -3,8 +3,7 @@ import type { App } from "electron";
 import { readFile } from "fs";
 import { release } from "os";
 
-// env.PKG_VERSION is replaced by Vite during build phase
-const sdkVersion = "aptabase-electron@env.PKG_VERSION";
+const sdkVersion = `aptabase-electron@${process.env.PKG_VERSION}`;
 
 export interface EnvironmentInfo {
   isDebug: boolean;
