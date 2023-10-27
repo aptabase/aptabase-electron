@@ -1,4 +1,4 @@
-import { app, net, protocol } from "electron";
+import { app, ipcMain, net, protocol } from "electron";
 import { EnvironmentInfo, getEnvironmentInfo } from "./lib/env";
 import { newSessionId } from "./lib/session";
 
@@ -135,6 +135,8 @@ function drainBuffer() {
 }
 
 function registerAptabaseProtocol() {
+  if (!protocol.registerSchemesAsPrivileged) return;
+
   protocol.registerSchemesAsPrivileged([
     {
       scheme: "aptabase-ipc",
@@ -149,6 +151,20 @@ function registerAptabaseProtocol() {
 }
 
 function registerEventHandler() {
+  ipcMain.handle(
+    "trackEvent",
+    (
+      _event,
+      eventName: string,
+      props?: Record<string, string | number | boolean>
+    ) => {
+      trackEvent(eventName, props).catch((err) => {
+        console.error("Aptabase: Failed to send event", err);
+      });
+    }
+  );
+
+  if (!protocol.registerStringProtocol) return;
   protocol.registerStringProtocol("aptabase-ipc", (request, callback) => {
     try {
       const data = request.uploadData?.[0]?.bytes;

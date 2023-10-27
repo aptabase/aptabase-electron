@@ -1,5 +1,6 @@
 import { initialize, trackEvent } from "@aptabase/electron/main";
 import { BrowserWindow, app } from "electron";
+import { join } from "path";
 
 initialize("A-DEV-7523634193");
 
@@ -8,6 +9,10 @@ app.whenReady().then(() => {
 
   const win = new BrowserWindow({
     title: "Main window",
+    webPreferences: {
+      contextIsolation: true,
+      preload: join(__dirname, "preload.js"),
+    },
   });
 
   // You can use `process.env.VITE_DEV_SERVER_URL` when the vite command is called `serve`

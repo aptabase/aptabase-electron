@@ -15,6 +15,11 @@
       "import": "./dist/main.mjs",
       "require": "./dist/main.cjs",
       "types": "./dist/main.d.ts"
+    },
+    "./preload": {
+      "import": "./dist/preload.mjs",
+      "require": "./dist/preload.cjs",
+      "types": "./dist/preload.d.ts"
     }
   },
   "typesVersions": {
@@ -47,6 +52,6 @@
     "tsup": "7.2.0"
   },
   "peerDependencies": {
-    "electron": ">= 8.x"
+    "electron": ">= 3.x"
   }
 }
