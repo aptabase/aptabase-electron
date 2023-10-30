@@ -22,11 +22,8 @@ export async function trackEvent(
 
   try {
     if (window.__aptabase_ipc__) {
-      console.log("USING IPC");
       await window.__aptabase_ipc__.trackEvent(eventName, props);
     } else {
-      console.log("USING PROTOCOL");
-
       await fetch("aptabase-ipc://trackEvent", {
         method: "POST",
         body: JSON.stringify({ eventName, props }),

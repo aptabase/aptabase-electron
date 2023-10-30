@@ -4,6 +4,7 @@
   "private": false,
   "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "sideEffects": false,
+  "main": "./dist/main.cjs",
   "exports": {
     "./package.json": "./package.json",
     ".": {

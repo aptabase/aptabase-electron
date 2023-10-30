@@ -151,8 +151,8 @@ function registerAptabaseProtocol() {
 }
 
 function registerEventHandler() {
-  ipcMain.handle(
-    "trackEvent",
+  ipcMain.on(
+    "aptabase:trackEvent",
     (
       _event,
       eventName: string,
