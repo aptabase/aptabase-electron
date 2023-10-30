@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    __aptabase_ipc__?: {
+    aptabase?: {
       trackEvent: (
         eventName: string,
         props?: Record<string, string | number | boolean>
@@ -21,14 +21,10 @@ export async function trackEvent(
   }
 
   try {
-    if (window.__aptabase_ipc__) {
-      await window.__aptabase_ipc__.trackEvent(eventName, props);
-    } else {
-      await fetch("aptabase-ipc://trackEvent", {
-        method: "POST",
-        body: JSON.stringify({ eventName, props }),
-      });
-    }
+    await fetch("aptabase-ipc://trackEvent", {
+      method: "POST",
+      body: JSON.stringify({ eventName, props }),
+    });
   } catch (err) {
     console.error("Aptabase: Failed to send event", err);
   }

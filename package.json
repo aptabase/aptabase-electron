@@ -5,22 +5,18 @@
   "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "sideEffects": false,
   "main": "./dist/main.cjs",
+  "types": "./dist/main.d.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    },
     "./main": {
       "import": "./dist/main.mjs",
       "require": "./dist/main.cjs",
       "types": "./dist/main.d.ts"
     },
-    "./preload": {
-      "import": "./dist/preload.mjs",
-      "require": "./dist/preload.cjs",
-      "types": "./dist/preload.d.ts"
+    "./renderer": {
+      "import": "./dist/renderer.mjs",
+      "require": "./dist/renderer.cjs",
+      "types": "./dist/renderer.d.ts"
     }
   },
   "typesVersions": {
@@ -50,7 +46,8 @@
     "package.json"
   ],
   "devDependencies": {
-    "tsup": "7.2.0"
+    "tsup": "7.2.0",
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
     "electron": ">= 3.x"

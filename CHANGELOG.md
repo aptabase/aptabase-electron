@@ -1,7 +1,9 @@
 ## 0.3.0
 
+**IMPOTANT** This release contains breaking changes.
+
+- **BREAKING CHANGE**: The import path to track events from the renderer process changed to `@aptabase/electron/renderer`
 - Added support for Electron 3+
-- Added preload IPC as an alternative to Custom Protocol IPC
 
 ## 0.2.3
 

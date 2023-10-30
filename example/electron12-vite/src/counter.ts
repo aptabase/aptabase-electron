@@ -1,4 +1,4 @@
-import { trackEvent } from "@aptabase/electron";
+import { trackEvent } from "@aptabase/electron/renderer";
 
 export function setupCounter(element: HTMLButtonElement) {
   let counter = 0;

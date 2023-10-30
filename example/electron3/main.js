@@ -3,7 +3,7 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const aptabase = require("@aptabase/electron");
 
-aptabase.initialize("A-US-0928558097");
+aptabase.initialize("A-DEV-00000000000");
 aptabase.trackEvent("app_started");
 
 function createWindow() {
