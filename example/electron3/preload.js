@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron");
 
-window.trackEvent = (...args) =>
-  ipcRenderer.send("aptabase:trackEvent", ...args);
+window.aptabase = {
+  trackEvent: (...args) => ipcRenderer.send("aptabase:trackEvent", ...args),
+};
