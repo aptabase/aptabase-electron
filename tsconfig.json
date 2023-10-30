@@ -1,24 +1,14 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "outDir": "dist",
+    "target": "es6",
     "strict": true,
-    "jsx": "preserve",
-    "allowJs": true,
-    "sourceMap": true,
-    "resolveJsonModule": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "types": ["@types"]
     },
-    "lib": ["esnext", "dom"]
-  },
-  "include": ["src/index.ts", "src/main.ts", "*.d.ts"]
+    "declaration": true,
+    "declarationDir": "./dist"
+  }
 }

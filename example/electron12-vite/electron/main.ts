@@ -1,7 +1,7 @@
 import { initialize, trackEvent } from "@aptabase/electron/main";
 import { BrowserWindow, app } from "electron";
 
-initialize("A-DEV-7523634193");
+initialize("A-DEV-00000000000");
 
 app.whenReady().then(() => {
   trackEvent("app_started");

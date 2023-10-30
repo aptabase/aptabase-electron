@@ -1,3 +1,10 @@
+## 0.3.0
+
+**IMPOTANT** This release contains breaking changes.
+
+- **BREAKING CHANGE**: The import path to track events from the renderer process changed to `@aptabase/electron/renderer`
+- Added support for Electron 3+
+
 ## 0.2.3
 
 Changed distributed extensions to `.cjs` and `.mjs`

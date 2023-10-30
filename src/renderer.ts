@@ -1,3 +1,14 @@
+declare global {
+  interface Window {
+    aptabase?: {
+      trackEvent: (
+        eventName: string,
+        props?: Record<string, string | number | boolean>
+      ) => Promise<void>;
+    };
+  }
+}
+
 export async function trackEvent(
   eventName: string,
   props?: Record<string, string | number | boolean>

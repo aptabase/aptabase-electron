@@ -31,7 +31,7 @@ app.whenReady().then(() => {
 Afterward, you can start tracking events with `trackEvent`:
 
 ```js
-import { trackEvent } from "@aptabase/electron";
+import { trackEvent } from "@aptabase/electron/renderer";
 
 trackEvent("app_started"); // An event with no properties
 trackEvent("screen_view", { name: "Settings" }); // An event with a custom property
@@ -39,8 +39,10 @@ trackEvent("screen_view", { name: "Settings" }); // An event with a custom prope
 
 **NOTE:** The `trackEvent` function is available under separate import paths, depending on where you want to track the event from.
 
-- import from `@aptabase/electron` to track events from the `renderer` process
+- import from `@aptabase/electron/renderer` to track events from the `renderer` process
 - import from `@aptabase/electron/main` to track events from the `main` process
+
+> The instruction above is recommended for modern setups of Electron. For older versions of Electron, please refer to the [alternative instructions](https://github.com/aptabase/aptabase-electron/discussions/1).
 
 A few important notes:
 

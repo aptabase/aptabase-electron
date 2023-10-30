@@ -1,20 +1,22 @@
 {
   "name": "@aptabase/electron",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "private": false,
   "description": "Electron SDK for Aptabase: Open Source, Privacy-First and Simple Analytics for Mobile, Desktop and Web Apps",
   "sideEffects": false,
+  "main": "./dist/main.cjs",
+  "types": "./dist/main.d.ts",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
-    },
     "./main": {
       "import": "./dist/main.mjs",
       "require": "./dist/main.cjs",
       "types": "./dist/main.d.ts"
+    },
+    "./renderer": {
+      "import": "./dist/renderer.mjs",
+      "require": "./dist/renderer.cjs",
+      "types": "./dist/renderer.d.ts"
     }
   },
   "typesVersions": {
@@ -34,7 +36,8 @@
   "homepage": "https://github.com/aptabase/aptabase-electron",
   "license": "MIT",
   "scripts": {
-    "build": "vite build"
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "README.md",
@@ -43,11 +46,10 @@
     "package.json"
   ],
   "devDependencies": {
-    "@rollup/plugin-replace": "5.0.2",
-    "vite": "4.3.9",
-    "vite-plugin-dts": "2.3.0"
+    "tsup": "7.2.0",
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
-    "electron": ">= 8.x"
+    "electron": ">= 3.x"
   }
 }
