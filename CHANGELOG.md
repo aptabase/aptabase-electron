@@ -1,3 +1,7 @@
+## 0.3.1
+
+- use new session id format
+
 ## 0.3.0
 
 **IMPOTANT** This release contains breaking changes.
