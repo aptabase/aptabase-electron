@@ -1,0 +1,103 @@
+# Aptabase — Electron SDK
+
+> Electron SDK for Aptabase: open-source, privacy-first analytics for desktop apps built with Electron.
+
+Package: `@aptabase/electron`
+Install: `npm add @aptabase/electron`
+Repo: https://github.com/aptabase/aptabase-electron
+
+## Overview
+
+Aptabase is an open-source, privacy-first analytics platform. This SDK integrates Aptabase into Electron apps.
+
+- Get your App Key from the Aptabase dashboard (Settings > Instructions)
+- App keys follow the format `A-EU-*` (European) or `A-US-*` (US)
+- Only strings and numbers are allowed as custom property values
+- All tracking is non-blocking and runs in the background
+- No events are tracked automatically — you must call `trackEvent` manually
+- The SDK automatically captures OS, app version, locale, and other system properties
+
+## Important: Main vs Renderer Process
+
+Electron has two process types. This SDK exposes **separate import paths** for each:
+
+- `@aptabase/electron/main` — use in the **main** process (initialization + tracking)
+- `@aptabase/electron/renderer` — use in the **renderer** process (tracking only)
+
+You must initialize the SDK in the main process before the app is ready. You can then track events from either process.
+
+## Installation
+
+```bash
+npm add @aptabase/electron
+```
+
+## Initialization (Main Process)
+
+Initialize the SDK in your main process **before** `app.whenReady()`:
+
+```js
+import { initialize } from "@aptabase/electron/main";
+
+initialize("<YOUR_APP_KEY>");
+
+app.whenReady().then(() => {
+  // ... rest of your app initialization
+});
+```
+
+## Track Events (Renderer Process)
+
+```js
+import { trackEvent } from "@aptabase/electron/renderer";
+
+trackEvent("app_started");
+```
+
+## Track Events with Properties
+
+```js
+import { trackEvent } from "@aptabase/electron/renderer";
+
+trackEvent("screen_view", { name: "Settings" });
+trackEvent("purchase", { plan: "pro", price: 9.99 });
+```
+
+## Track Events (Main Process)
+
+You can also track events from the main process:
+
+```js
+import { initialize, trackEvent } from "@aptabase/electron/main";
+
+initialize("<YOUR_APP_KEY>");
+
+app.whenReady().then(() => {
+  trackEvent("app_started");
+});
+```
+
+## Configuration
+
+The `initialize` function accepts an optional options object:
+
+```js
+initialize("<YOUR_APP_KEY>", {
+  host: "https://your-self-hosted-instance.com", // only for self-hosted (A-SH-* keys)
+});
+```
+
+- `host` — required only for self-hosted Aptabase instances (app keys starting with `A-SH-*`)
+- Sessions automatically rotate after 1 hour of inactivity
+
+## Platform Notes
+
+- Requires Electron >= 3.x
+- `initialize` must be called before `app.whenReady()` — calling it after will disable tracking
+- Events sent before initialization completes are buffered and sent automatically once ready
+- Uses Electron's `net` module for HTTP requests (respects proxy settings)
+- Uses IPC (`ipcMain`/`ipcRenderer`) to relay events from renderer to main process
+
+## Cross-Discovery
+
+For all Aptabase SDKs and documentation, see: https://aptabase.com/llms.txt
